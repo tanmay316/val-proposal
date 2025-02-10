@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Will You Be My Valentine?</title>
+  <style>
+    /* Basic Page Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #FFC1CC, #FFDEE9);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    .container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      z-index: 2;
+    }
+    h1 {
+      color: #ff3366;
+      font-size: 3em;
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Button Styles */
+    button {
+      background-color: #ff6699;
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 25px;
+      margin: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      outline: none;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    /* The "No" button */
+    #noBtn {
+      margin-top: 20px;
+    }
+
+    /* Celebration Section (hidden until yes is clicked) */
+    #celebration {
+      margin-top: 20px;
+      display: none;
+    }
+
+    /* Create a cute heart shape using CSS */
+    .heart {
+      position: relative;
+      width: 30px;
+      height: 30px;
+      background-color: #ff6699;
+      transform: rotate(45deg);
+      margin: 10px;
+      display: inline-block;
+      animation: float 2s ease-in-out infinite;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: #ff6699;
+      border-radius: 50%;
+    }
+    .heart::before {
+      top: -15px;
+      left: 0;
+    }
+    .heart::after {
+      left: 15px;
+      top: 0;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(45deg); }
+      50% { transform: translateY(-20px) rotate(45deg); }
+      100% { transform: translateY(0) rotate(45deg); }
+    }
+
+    /* A cute animated figure (here a bunny emoji) */
+    .cute-figure {
+      font-size: 50px;
+      animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* Cute Gif at the top center */
+    #gif {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+
+    /* Falling Hearts Animation */
+    .falling-heart {
+      position: absolute;
+      font-size: 30px; /* Heart emoji size */
+      animation: fall 3s infinite ease-in;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    /* Positioning for falling hearts - from all corners and the center */
+    .falling-heart:nth-child(1) {
+      top: 0;
+      left: 0;
+      animation-delay: 0s;
+    }
+
+    .falling-heart:nth-child(2) {
+      top: 0;
+      right: 0;
+      animation-delay: 1s;
+    }
+
+    .falling-heart:nth-child(3) {
+      bottom: 0;
+      left: 0;
+      animation-delay: 2s;
+    }
+
+    .falling-heart:nth-child(4) {
+      bottom: 0;
+      right: 0;
+      animation-delay: 3s;
+    }
+
+    .falling-heart:nth-child(5) {
+      top: 10%;
+      left: 20%;
+      animation-delay: 4s;
+    }
+
+    .falling-heart:nth-child(6) {
+      top: 10%;
+      right: 20%;
+      animation-delay: 5s;
+    }
+
+    .falling-heart:nth-child(7) {
+      bottom: 10%;
+      left: 20%;
+      animation-delay: 6s;
+    }
+
+    .falling-heart:nth-child(8) {
+      bottom: 10%;
+      right: 20%;
+      animation-delay: 7s;
+    }
+
+    /* Middle falling hearts */
+    .falling-heart:nth-child(9) {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 8s;
+    }
+
+    .falling-heart:nth-child(10) {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 9s;
+    }
+
+    /* Romantic animation screen */
+    #romanticScreen {
+      display: none;
+      text-align: center;
+      padding: 50px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    /* Romantic song */
+    #romanticSong {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Falling hearts from all corners and the middle -->
+  <div class="falling-heart" style="animation-delay: 0s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 1s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 2s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 3s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 4s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 5s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 6s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 7s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 8s;">❤️</div>
+  <div class="falling-heart" style="animation-delay: 9s;">❤️</div>
+  
+  <div class="container">
+    <!-- Cute Gif of proposal -->
+    <img id="gif" src="gif/propose-girlfriends.gif" alt="Proposal Gif">
+
+    <h1 id="proposalText">Will You Be My Valentine?</h1>
+    <!-- Proposal button -->
+    <button id="yesBtn">Yes, be my Valentine!</button>
+    <!-- Rejection button -->
+    <button id="noBtn">No</button>
+    
+    <!-- Hidden celebration area that appears when the "Yes" button is clicked -->
+    <div id="celebration">
+      <div class="cute-figure">🐰</div>
+      <div>
+        <span class="heart"></span>
+        <span class="heart"></span>
+        <span class="heart"></span>
+      </div>
+    </div>
+
+    <!-- Romantic screen after proposal -->
+    <div id="romanticScreen">
+      <h2>YES! I LOVE YOU TOO!</h2>
+      <p>We're meant to be together forever 💕</p>
+      <img src="gif/puuung-kiss-dragonxsega.gif" alt="Romantic Gif">
+    </div>
+  </div>
+  
+  <!-- Romantic song -->
+  <audio id="dandelionsSong" autoplay loop>
+    <source src="Ruth B. - Dandelions (Lyrics).mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    // Grab the elements
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const celebration = document.getElementById('celebration');
+    const romanticScreen = document.getElementById('romanticScreen');
+    const dandelionsSong = document.getElementById('dandelionsSong');
+    const gif = document.getElementById('gif');
+    const proposalText = document.getElementById('proposalText');
+    
+    // Array of different "No" button texts
+    const noReplies = [
+      "Really a no? Don't be so cruel!",
+      "Last chance!",
+      "Try again!",
+      "Rethought your answer?",
+      "Please say yes...",
+      "You're breaking my heart!",
+      "Why no? 😢",
+      "You are making me nervous!",
+      "This hurts a bit!",
+      "Don't leave me hanging!"
+    ];
+
+    // Counter for increasing "Yes" button size
+    let yesBtnSize = 1;
+
+    // When the proposal button is clicked…
+    yesBtn.addEventListener('click', function() {
+      // Change the text
+      proposalText.innerText = "Really? Do you Love❤️me?";
+
+      // Reset the size of the "Yes" button to original size
+      yesBtn.style.transform = `scale(1)`;
+      
+      // Change the gif to the new one
+      gif.src = "gif/peach-goma-goma-peach.gif";
+      
+      // Show the celebration elements (cute bunny and hearts)
+      celebration.style.display = "block";
+      
+      // Change the "Yes" button to "Really? I Love You So Much!"
+      yesBtn.innerText = "Yesssss... I love you so much!";
+      yesBtn.addEventListener('click', function() {
+        romanticScreen.style.display = "block"; // Show the romantic screen
+        dandelionsSong.play(); // Start the romantic song
+        yesBtn.style.display = "none"; // Hide the "Really?" button
+      });
+      
+      // Hide the "No" button
+      noBtn.style.display = "none";
+    });
+
+    // When the "No" button is clicked…
+    noBtn.addEventListener('click', function() {
+      // Change the text of the "No" button randomly
+      const randomIndex = Math.floor(Math.random() * noReplies.length);
+      noBtn.innerText = noReplies[randomIndex];
+      
+      // Increment the "Yes" button size every time the "No" button is clicked
+      yesBtnSize += 0.1;
+      yesBtn.style.transform = `scale(${yesBtnSize})`;
+      
+      // Make the "No" button jump around
+      const container = document.querySelector('.container');
+      const rect = container.getBoundingClientRect();
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+      
+      const randomX = Math.random() * (rect.width - btnWidth);
+      const randomY = Math.random() * (rect.height - btnHeight);
+      
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+    });
+  </script>
+</body>
+</html>
